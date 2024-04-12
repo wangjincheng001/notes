@@ -30,13 +30,11 @@ docker是一个虚拟机。但是主要应用中Linux和后台一些应用。
 
 ## 使用
 
-###  play with online
-
-
+### play with docker
 
 ### 仓库—镜像—容器
 
-```docker
+```shell
 //从仓库下载nginx镜像
 //这两行代码是一个作用，都是下载最新的镜像
 
@@ -54,29 +52,74 @@ docker run -d -p 81:80 nginx
 //查看已运行的端口
 docker ps
 
-//修改端口的id
-//bash参数是进入该容器
+//进入容器
+//-i :即使没有附加也保持STDIN 打开
+//-t :分配一个伪终端
+//通过 exec 命令对指定的容器执行 bash
 docker exec -it 端口id bash
 
 //进入该容器后，我们可以修改里面的文件
 //访问80端口，出现hello
-cd /user/share/nginx/html/
+cd /usr/share/nginx/html/
 echo hello > index.html //修改文件内容
 cat index.html //查看文件内容
 ls //退出
 exit //退出
 
-//删除端口
-docker rm -f 端口id
+//删除容器
+docker rm -f 容器id
 
-//提及镜像，指定镜像名字
-docker commit 端口id m1
+//提交容器，指定镜像名字
+docker commit 容器id 镜像名字
 //查看镜像
 docker images
 
 docker run -d -p 90:80 nginx
 
+//删除镜像
+//-f 强制执行
+docker rmi -f 镜像名
 ```
 
 ### Dockerfile
+
+```shell
+mkdir mynginx
+cd mynginx
+
+文件中新建dockerfile文件和index.html
+```
+
+```dockerfile
+//dockerfile文件中书写
+
+
+//基础镜像
+from nginx
+//当前目录所有文件拷贝至/usr/share/nginx/html/
+add ./ /usr/share/nginx/html/
+```
+
+```html
+//index.html文件中书写
+
+run win!
+```
+
+```shell
+docker build -t 镜像名 .
+
+docker run -d -p 100:80 m2
+docker ps
+```
+
+### tar文件
+
+```shell
+//将一个镜像保存为tar文件
+docker save 镜像名 >1.tar
+
+//将一个tar文件恢复为镜像
+docker load <1.tar
+```
 
